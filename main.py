@@ -66,10 +66,11 @@ def cheak_balance(uid,token):
 			
 			}
 			all_data.append(local_data)
-			print(uid,"\t",int(baleance)/150," Tk")
+			x=int(baleance)/150
+			return str(x)+"  TK"
 		
 	except:
-				print(uid,end="\r")
+				return ''
 				None
 				
 				#print(resp.text)
@@ -80,7 +81,9 @@ def cheak_balance(uid,token):
 token=input("Enter token : ")	
 all_data=[]
 for i in range(1,10000):
-	cheak_balance(str(i),token)
+	x=cheak_balance(str(i),token)
+	print("-------------------------------------------------------------")
+	print(i,"-----",x)
 	all_data = sorted(all_data, key=operator.itemgetter('Balance'),reverse=True)
 	save_data(all_data)
 	
