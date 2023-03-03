@@ -76,7 +76,7 @@ def cheak_balance(uid,token):
 	#json_raw_data =json.loads(resp.text)
 token=input("Enter token : ")	
 all_data=[]
-for i in range(1,500):
+for i in range(1,10000):
 	cheak_balance(str(i),token)
 	all_data = sorted(all_data, key=operator.itemgetter('Balance'),reverse=True)
 	save_data(all_data)
