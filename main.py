@@ -66,9 +66,12 @@ def cheak_balance(uid,token):
 			
 			}
 			all_data.append(local_data)
-			print(uid,"    ",int(baleance)/150," Tk")
+			print(uid,"\t",int(baleance)/150," Tk")
 		
 	except:
+				print(uid,end="\r")
+				None
+				
 				#print(resp.text)
 				
 				
