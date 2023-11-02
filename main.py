@@ -1,43 +1,61 @@
 import cv2
 import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 
-# Input video file
-input_video = 'video.mp4'
-# Output video file with watermark
-output_video = 'output_video.mp4'
+# Open the video file
+video_capture = cv2.VideoCapture("video.mp4")
 
-# Text to display as watermark
-text = 'Your Marquee Text'
-font = cv2.FONT_HERSHEY_SIMPLEX
-font_scale = 1
-font_color = (255, 255, 255)  # White color
-thickness = 2
+# Get the frame width, height, and frame rate from the input video
+frame_width = int(video_capture.get(3))
+frame_height = int(video_capture.get(4))
+frame_rate = video_capture.get(cv2.CAP_PROP_FPS)
 
-cap = cv2.VideoCapture(input_video)
-if not cap.isOpened():
-    print("Error: Could not open video.")
-    exit()
+# Define the codec and create a VideoWriter object with the same frame rate
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
-# Get video properties
-frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
-frames_per_second = int(cap.get(5))
+# Specify the output file path and format
+output_file_path = "output_video.mp4"
+out = cv2.VideoWriter(output_file_path, fourcc, frame_rate, (frame_width, frame_height))
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter(output_video, fourcc, frames_per_second, (frame_width, frame_height))
+# Text to display with the marquee effect
+marquee_text = "MLWHDTV"
+font = ImageFont.truetype("arial.ttf", 40)  # You can use your preferred font
+
+# Calculate the width and height of the marquee area
+marquee_height = 100  # Height of the marquee area
+marquee_width = frame_width  # Width of the marquee area (same as the frame width)
+
+# Initialize frame count
+frame_count = 0
 
 while True:
-    ret, frame = cap.read()
+    ret, frame = video_capture.read()
+
     if not ret:
         break
 
-    # Add the marquee text to the frame
-    frame = cv2.putText(frame, text, (50, 50), font, font_scale, font_color, thickness, cv2.LINE_AA)
+    # Create a black frame to overlay the marquee
+    marquee_frame = np.zeros((marquee_height, marquee_width, 3), np.uint8)
 
-    # Write the frame to the output video
+    # Calculate the position of the marquee text for scrolling
+    text_width, text_height = font.getsize(marquee_text)
+    position_x = frame_count % (frame_width + text_width)
+    position_y = (marquee_height - text_height) // 2
+
+    # Create a text image for the marquee
+    pil_img = Image.fromarray(marquee_frame)
+    draw = ImageDraw.Draw(pil_img)
+    draw.text((position_x, position_y), marquee_text, font=font, fill=(255, 255, 255))
+    marquee_frame = np.array(pil_img)
+
+    # Stack the marquee area on top of the frame
+    frame = np.vstack((frame, marquee_frame))
+
     out.write(frame)
+    frame_count += 1
 
-cap.release()
+video_capture.release()
 out.release()
+cv2.destroyAllWindows()
 
-print(f'Video with watermark saved as {output_video}')
+# Video is saved to the specified storage location (output_file_path)
