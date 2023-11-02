@@ -14,7 +14,7 @@ frame_rate = video_capture.get(cv2.CAP_PROP_FPS)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
 # Specify the output file path and format
-output_file_path = "path/to/your/storage/output_video.mp4"
+output_file_path = "output_video.mp4"
 out = cv2.VideoWriter(output_file_path, fourcc, frame_rate, (frame_width, frame_height))
 
 # Text to display with the marquee effect
@@ -38,9 +38,8 @@ while True:
 
     # Calculate the position of the marquee text for scrolling
     font = ImageFont.load_default()  # Use a built-in font
-    text_width, text_height = font.getsize(marquee_text)
-    position_x = frame_count % (frame_width + text_width)
-    position_y = (marquee_height - text_height) // 2
+    position_x = frame_count % (frame_width + marquee_width)
+    position_y = (marquee_height - font.getsize(marquee_text)[1]) // 2
 
     # Create a text image for the marquee
     pil_img = Image.fromarray(marquee_frame)
