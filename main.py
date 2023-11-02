@@ -14,12 +14,11 @@ frame_rate = video_capture.get(cv2.CAP_PROP_FPS)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
 # Specify the output file path and format
-output_file_path = "output_video.mp4"
+output_file_path = "path/to/your/storage/output_video.mp4"
 out = cv2.VideoWriter(output_file_path, fourcc, frame_rate, (frame_width, frame_height))
 
 # Text to display with the marquee effect
-marquee_text = "MLWHDTV"
-font = ImageFont.truetype("arial.ttf", 40)  # You can use your preferred font
+marquee_text = "Your marquee text"
 
 # Calculate the width and height of the marquee area
 marquee_height = 100  # Height of the marquee area
@@ -38,6 +37,7 @@ while True:
     marquee_frame = np.zeros((marquee_height, marquee_width, 3), np.uint8)
 
     # Calculate the position of the marquee text for scrolling
+    font = ImageFont.load_default()  # Use a built-in font
     text_width, text_height = font.getsize(marquee_text)
     position_x = frame_count % (frame_width + text_width)
     position_y = (marquee_height - text_height) // 2
